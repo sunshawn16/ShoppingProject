@@ -20,6 +20,7 @@ public class CartTest {
         List<Item> cartList= new ArrayList<Item>();
         Item item1=new Item();
         Item item2=new Item();
+
         item1.setProductId("ITEM000001");
 
         item1.setNum(1);
