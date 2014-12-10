@@ -19,11 +19,37 @@ public class ShoppingMall {
     private double origPayment;
     private double disPayment;
 
-//    List<com.tw.shopping.product.Item> basicItemList;
+    PromotionSet promotionSet;
+
+    public double getOrigPayment() {
+        return origPayment;
+    }
+
+    public void setOrigPayment(double origPayment) {
+        this.origPayment = origPayment;
+    }
+
+    public double getDisPayment() {
+        return disPayment;
+    }
+
+    public void setDisPayment(double disPayment) {
+        this.disPayment = disPayment;
+    }
+
+    public PromotionSet getPromotionSet() {
+        return promotionSet;
+    }
+
+    public void setPromotionSet(PromotionSet promotionSet) {
+        this.promotionSet = promotionSet;
+    }
+
+    //    List<com.tw.shopping.product.Item> basicItemList;
 //    List<com.tw.shopping.promotion.DiscountItem> discountItemList;
 //    List<com.tw.shopping.promotion.SecondHalfItem> secondHalfItemList;
 //    List<com.tw.shopping.promotion.HundredMinusItem> hundredMinusItemList;
-    PromotionSet promotionSet=new PromotionSet();
+
 
     //读入商场基本数据和促销活动
     public void initialShoppingMall(){
@@ -58,7 +84,9 @@ public class ShoppingMall {
             disPayment = disPayment +item.getPayment();
             System.out.println(item.getProductId()+":       "+item.getNum()+"   "+item.getOrigPrice()+"   "+item.getPayment());
         }
-        specialOfferHundredMinus(3);
+
+
+        disPayment=SpecialOffer.specialOfferHundredMinus(3,disPayment);
 
         System.out.println("Total  (before  after  U save)");
         System.out.println(disPayment +"   "+origPayment+"    "+ disPayment +"    "+(origPayment- disPayment));
@@ -68,13 +96,10 @@ public class ShoppingMall {
     }
 
 
-   // 购物车附加活动-购物车满百减----考虑单独提出来一个类
-    private void specialOfferHundredMinus(double reduction) {
-        if(disPayment >100){
-            int totalHundredCount=(int) disPayment /100;
-            disPayment = disPayment -totalHundredCount*reduction;
-        }
-    }
+
+
+
+
 
     //产品系列活动
     private Product decorateDiscount(Product item, String productId) {
@@ -111,10 +136,16 @@ public class ShoppingMall {
 
     public static void main(String args[]){
         ShoppingMall shoppingMall= new ShoppingMall();
-        shoppingMall.initialShoppingMall();
-        Cart cart= new Cart(shoppingMall.promotionSet);
+        Cart cart= new Cart();
+        //cart.setPromotionSet(shoppingMall.promotionSet);
 
-        shoppingMall.checkOut(cart.putInCart("./File/cart.txt"));
+        PromotionSet promotionSet=new PromotionSet();
+        shoppingMall.setPromotionSet(promotionSet);
+        shoppingMall.initialShoppingMall();
+
+
+
+        shoppingMall.checkOut(cart.putInCart("./File/cart.txt",shoppingMall.promotionSet.getBasicItemList()));
 
 
     }

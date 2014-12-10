@@ -15,24 +15,44 @@ import java.util.List;
 public class Cart {
 
     private Parse cartItem;
-    PromotionSet promotionSet;
+
+//    PromotionSet promotionSet;
+
+
     public Cart(){}
-    public Cart(PromotionSet promotionSet){
-        this.promotionSet=promotionSet;
-    }
+//    public Cart(PromotionSet promotionSet){
+//        this.promotionSet=promotionSet;
+//    }
 
     //添加购物车和数据整理
-    public List<Item> putInCart(String path){
+    public List<Item> putInCart(String path,List<Item> basicList){
 
         //解析购物车文件
-        List<Item> cartList = readCart(path);
+        List<Item> cartList= new ArrayList<Item>();
 
+        cartList=initialCart(path);
         //读取原始价格
-        InitialOrigPrice(cartList);
+        initialOrigPrice(cartList,basicList);
 
         //整理乱序的购物车,以得到实数量
         return settleCart(cartList);
 
+    }
+    public List<Item> t_initialCart(String path){
+        return initialCart(path);
+    }
+
+    private List<Item> initialCart(String path) {
+        cartItem = new CartParse();
+        List<Item> cartList= null;
+
+        try {
+            cartList = cartItem.parse(path);
+        } catch (IOException e) {
+            System.out.println("path has problem!");
+            e.printStackTrace();
+        }
+        return cartList;
     }
 
     public List<Item> t_settleCart(List<Item> cartList) {
@@ -70,26 +90,17 @@ public class Cart {
         return finalList;
     }
 
-    private List<Item> readCart(String path) {
-        cartItem = new CartParse();
-        List<Item> cartList= null;
-        try {
-            cartList = cartItem.parse(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return cartList;
+
+
+    public void t_InitialOrigPrice(List<Item> cartList,List<Item> basicList) {
+        initialOrigPrice(cartList,basicList);
     }
 
-    public void t_InitialOrigPrice(List<Item> cartList) {
-        InitialOrigPrice(cartList);
-    }
-
-    private void InitialOrigPrice(List<Item> cartList) {
+    private void initialOrigPrice(List<Item> cartList,List<Item> basicList) {
         for (Item item : cartList) {
-            for (int i = 0; i < promotionSet.getBasicItemList().size(); i++) {
-                if (item.getProductId().equals(promotionSet.getBasicItemList().get(i).getProductId())) {
-                    item.setOrigPrice(promotionSet.getBasicItemList().get(i).getOrigPrice());
+            for (int i = 0; i < basicList.size(); i++) {
+                if (item.getProductId().equals(basicList.get(i).getProductId())) {
+                    item.setOrigPrice(basicList.get(i).getOrigPrice());
                 }
             }
         }

@@ -10,8 +10,6 @@ public abstract class Product {
     protected double disPrice;
     protected double payment;
 
-
-
     public String getProductId() {
         return productId;
     }
