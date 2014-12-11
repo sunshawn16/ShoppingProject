@@ -19,16 +19,24 @@
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>cobertura-maven-plugin</artifactId>
     <configuration>
-          <check>
-            <branchRate>100</branchRate>
-            <lineRate>100</lineRate>
-          </check>
+      <check>
+        <branchRate>100</branchRate>
+        <lineRate>100</lineRate>
+      </check>
     </configuration>
     <executions>
       <execution>
+        <id>Clean</id>
+        <phase>clean</phase>
         <goals>
           <goal>clean</goal>
-          <goal>check</goal>
+        </goals>
+      </execution>
+      <execution>
+        <id>Verify</id>
+        <phase>verify</phase>
+        <goals>
+          <goal>cobertura</goal>
         </goals>
       </execution>
     </executions>
