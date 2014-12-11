@@ -23,6 +23,9 @@
         <branchRate>100</branchRate>
         <lineRate>100</lineRate>
       </check>
+      <instrumentation>
+        <ignoreTrivial>true</ignoreTrivial>                 
+      </instrumentation>
     </configuration>
     <executions>
       <execution>
