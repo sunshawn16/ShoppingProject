@@ -6,13 +6,17 @@ import com.tw.shopping.promotion.DiscountParse;
 import com.tw.shopping.promotion.PromotionSet;
 import com.tw.shopping.shoppingmall.Cart;
 import com.tw.shopping.util.CartParse;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,24 +72,33 @@ public class CartTest {
     @Test
     public void should_initial_price_when_do_initial() throws Exception {
 
+        Cart cart= new Cart();
         List<Item>  basicItemList=new ArrayList<Item>();
         Item item= new Item();
         item.setProductId("Item000001");
         item.setOrigPrice(50);
         basicItemList.add(item);
-
-        Cart cart= new Cart();
-        //cart.setPromotionSet(promotionSet);
-
         List<Item>  cartList=new ArrayList<Item>();
         Item item1= new Item();
         item1.setProductId("Item000001");
         cartList.add(item1);
 
-        cart.t_InitialOrigPrice(cartList,basicItemList);
+        cart.t_InitialOrigPrice(cartList, basicItemList);
+
         assertEquals(50,cartList.get(0).getOrigPrice(),0.5);
 
     }
 
+    @Rule
+    public ExpectedException thrown= ExpectedException.none();
 
+    @Test
+    public void should_have_problem_when_path_is_wrong() throws Exception {
+
+        Cart cart = new Cart();
+        thrown.expect(IOException.class);
+        thrown.expectMessage("error");
+        cart.t_initialCart("adasdasdsa");
+
+    }
 }

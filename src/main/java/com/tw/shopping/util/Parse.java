@@ -27,6 +27,7 @@ public abstract class Parse<V> {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new IOException("error");
         } finally {
             if (reader != null) {
                 try {

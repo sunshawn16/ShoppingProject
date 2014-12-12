@@ -59,10 +59,10 @@ public class ShoppingMall {
         hundred = new HundredMinusParse();
 
         try {
-            promotionSet.setBasicItemList(basic.parse("./File/itemlist.txt")); ;
-            promotionSet.setDiscountItemList(discount.parse("./File/discount_promotion")); ;
-            promotionSet.setSecondHalfItemList(second.parse("./File/second_half_promotion.txt"));
-            promotionSet.setHundredMinusItemList(hundred.parse("./File/hundredMinus")); ;
+            promotionSet.setBasicItemList(basic.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/itemlist.txt")); ;
+            promotionSet.setDiscountItemList(discount.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/discount_promotion")); ;
+            promotionSet.setSecondHalfItemList(second.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/second_half_promotion.txt"));
+            promotionSet.setHundredMinusItemList(hundred.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/hundredMinus")); ;
 
         }
         catch(IOException e) {
@@ -82,27 +82,29 @@ public class ShoppingMall {
 
             origPayment=origPayment+item.getOrigPrice()*item.getNum();
             disPayment = disPayment +item.getPayment();
-            System.out.println(item.getProductId()+":       "+item.getNum()+"   "+item.getOrigPrice()+"   "+item.getPayment());
+            printItem(item);
         }
-
-
         disPayment=SpecialOffer.specialOfferHundredMinus(3,disPayment);
 
-        System.out.println("Total  (before  after  U save)");
-        System.out.println(disPayment +"   "+origPayment+"    "+ disPayment +"    "+(origPayment- disPayment));
-
-
-
+        printTotal();
     }
 
 
 
+    public void printItem(Product item) {
+        System.out.println(item.getProductId()+":       "+item.getNum()+"   "+item.getOrigPrice()+"   "+item.getPayment());
+    }
 
+    public int printTotal() {
+        System.out.println("Total  (before  after  U save)");
+        System.out.println(disPayment +"   "+origPayment+"    "+ disPayment +"    "+(origPayment- disPayment));
+        return 1;
+    }
 
 
 
     //产品系列活动
-    private Product decorateDiscount(Product item, String productId) {
+    public Product decorateDiscount(Product item, String productId) {
         for(DiscountItem discountItem:promotionSet.getDiscountItemList()){
             if(productId.equals(discountItem.getProductId())){
                 item = new Discount(item,discountItem.getDiscountPercentage());
@@ -112,7 +114,7 @@ public class ShoppingMall {
         return item;
     }
 
-    private Product decorateHundredItem(Product item, String productId) {
+    public Product decorateHundredItem(Product item, String productId) {
         for(HundredMinusItem hundredMinusItem:promotionSet.getHundredMinusItemList()){
             if(productId.equals(hundredMinusItem.getProductId())){
                 item=new HundredMinus(item,hundredMinusItem.getReduction());
@@ -122,7 +124,7 @@ public class ShoppingMall {
         return item;
     }
 
-    private Product decorateSecondHalfItem(Product item,String productId){
+    public Product decorateSecondHalfItem(Product item,String productId){
         for(SecondHalfItem secondHalfItem:promotionSet.getSecondHalfItemList()) {
             if (productId.equals(secondHalfItem.getProductId())) {
                 item = new SecondHalf(item);
@@ -133,7 +135,6 @@ public class ShoppingMall {
     }
 
     //主函数
-
     public static void main(String args[]){
         ShoppingMall shoppingMall= new ShoppingMall();
         Cart cart= new Cart();
@@ -141,11 +142,9 @@ public class ShoppingMall {
 
         PromotionSet promotionSet=new PromotionSet();
         shoppingMall.setPromotionSet(promotionSet);
-        shoppingMall.initialShoppingMall();
+       shoppingMall.initialShoppingMall();
 
-
-
-        shoppingMall.checkOut(cart.putInCart("./File/cart.txt",shoppingMall.promotionSet.getBasicItemList()));
+        shoppingMall.checkOut(cart.putInCart("/home/sun/IdeaProjects/ShoppingProject-master/File/cart.txt",shoppingMall.promotionSet.getBasicItemList()));
 
 
     }

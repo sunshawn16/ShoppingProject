@@ -30,7 +30,12 @@ public class Cart {
         //解析购物车文件
         List<Item> cartList= new ArrayList<Item>();
 
-        cartList=initialCart(path);
+        try {
+            cartList=initialCart(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+//            cartList=initialCart("")
+        }
         //读取原始价格
         initialOrigPrice(cartList,basicList);
 
@@ -38,20 +43,20 @@ public class Cart {
         return settleCart(cartList);
 
     }
-    public List<Item> t_initialCart(String path){
+    public List<Item> t_initialCart(String path) throws IOException{
         return initialCart(path);
     }
 
-    private List<Item> initialCart(String path) {
+    private List<Item> initialCart(String path) throws IOException {
         cartItem = new CartParse();
         List<Item> cartList= null;
-
-        try {
-            cartList = cartItem.parse(path);
-        } catch (IOException e) {
-            System.out.println("path has problem!");
-            e.printStackTrace();
-        }
+        cartList = cartItem.parse(path);
+//        try {
+//            cartList = cartItem.parse(path);
+//        } catch (IOException e) {
+//            System.out.println("path has problem!");
+//            e.printStackTrace();
+//        }
         return cartList;
     }
 
