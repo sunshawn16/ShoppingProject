@@ -4,6 +4,7 @@ package com.tw.shopping.shoppingmall;
 import com.tw.shopping.promotion.*;
 import com.tw.shopping.product.*;
 import com.tw.shopping.util.Parse;
+import com.tw.shopping.util.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,10 +13,11 @@ import java.util.List;
  * Created by sun on 14-12-7.
  */
 public class ShoppingMall {
-    private Parse basic;
+
     private Parse discount;
     private Parse second;
     private Parse hundred;
+    private Parse basic;
     private double origPayment;
     private double disPayment;
 
@@ -50,58 +52,15 @@ public class ShoppingMall {
 //    List<com.tw.shopping.promotion.SecondHalfItem> secondHalfItemList;
 //    List<com.tw.shopping.promotion.HundredMinusItem> hundredMinusItemList;
 
-
-    //读入商场基本数据和促销活动
-    public void initialShoppingMall(){
-        basic = new BasicItemParse();
-        discount = new DiscountParse();
-        second = new SecondHalfParse();
-        hundred = new HundredMinusParse();
-
-        try {
-            promotionSet.setBasicItemList(basic.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/itemlist.txt")); ;
-            promotionSet.setDiscountItemList(discount.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/discount_promotion")); ;
-            promotionSet.setSecondHalfItemList(second.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/second_half_promotion.txt"));
-            promotionSet.setHundredMinusItemList(hundred.parse("/home/sun/IdeaProjects/ShoppingProject-master/File/hundredMinus")); ;
-
-        }
-        catch(IOException e) {
-            System.out.println("preparation Failed");
-        }
-    }
-
-    //结算环节加打印小票
-    public void checkOut(List<Item> cartList){
-
-        for(Product item:cartList){
-            String productId=item.getProductId();
-            item = decorateDiscount(item, productId);
-            item = decorateSecondHalfItem(item,productId);
-            item = decorateHundredItem(item, productId);
-            item.cost();
-
-            origPayment=origPayment+item.getOrigPrice()*item.getNum();
-            disPayment = disPayment +item.getPayment();
-            printItem(item);
-        }
-        disPayment=SpecialOffer.specialOfferHundredMinus(3,disPayment);
-
-        printTotal();
-    }
-
-
-
-    public void printItem(Product item) {
-        System.out.println(item.getProductId()+":       "+item.getNum()+"   "+item.getOrigPrice()+"   "+item.getPayment());
-    }
-
     public int printTotal() {
         System.out.println("Total  (before  after  U save)");
         System.out.println(disPayment +"   "+origPayment+"    "+ disPayment +"    "+(origPayment- disPayment));
         return 1;
     }
 
-
+    public void printItem(Product item) {
+        System.out.println(item.getProductId()+":       "+item.getNum()+"   "+item.getOrigPrice()+"   "+item.getPayment());
+    }
 
     //产品系列活动
     public Product decorateDiscount(Product item, String productId) {
@@ -134,20 +93,65 @@ public class ShoppingMall {
         return item;
     }
 
-    //主函数
-    public static void main(String args[]){
-        ShoppingMall shoppingMall= new ShoppingMall();
-        Cart cart= new Cart();
-        //cart.setPromotionSet(shoppingMall.promotionSet);
+    //结算环节加打印小票
+    public void checkOut(List<Item> cartList){
 
-        PromotionSet promotionSet=new PromotionSet();
-        shoppingMall.setPromotionSet(promotionSet);
-       shoppingMall.initialShoppingMall();
+        for(Product item:cartList){
+            String productId=item.getProductId();
+            item = decorateDiscount(item, productId);
+            item = decorateSecondHalfItem(item,productId);
+            item = decorateHundredItem(item, productId);
+            item.cost();
 
-        shoppingMall.checkOut(cart.putInCart("/home/sun/IdeaProjects/ShoppingProject-master/File/cart.txt",shoppingMall.promotionSet.getBasicItemList()));
+            origPayment=origPayment+item.getOrigPrice()*item.getNum();
+            disPayment = disPayment +item.getPayment();
+            printItem(item);
+        }
+        disPayment=SpecialOffer.specialOfferHundredMinus(3,disPayment);
+
+        printTotal();
+    }
+
+    //读入商场基本数据和促销活动
+    public void initialShoppingMall() throws IOException {
+
+        discount = new DiscountParse();
+        second = new SecondHalfParse();
+        hundred = new HundredMinusParse();
+        basic = new BasicItemParse();
+
+        String path= Path.getPath();
+
+
+            promotionSet.setBasicItemList(basic.parse(path+"/File/itemlist.txt")); ;
+            promotionSet.setDiscountItemList(discount.parse(path + "/File/discount_promotion")); ;
+            promotionSet.setSecondHalfItemList(second.parse(path+"/File/second_half_promotion.txt"));
+            promotionSet.setHundredMinusItemList(hundred.parse(path+"/File/hundredMinus")); ;
 
 
     }
+
+
+
+
+
+
+
+    //主函数
+//    public static void main(String args[]){
+//        ShoppingMall shoppingMall= new ShoppingMall();
+//        Cart cart= new Cart();
+//        //cart.setPromotionSet(shoppingMall.promotionSet);
+//
+//        PromotionSet promotionSet=new PromotionSet();
+//        shoppingMall.setPromotionSet(promotionSet);
+//       shoppingMall.initialShoppingMall();
+//
+//        String path=Path.getPath();
+//        shoppingMall.checkOut(cart.putInCart(path+"/File/cart.txt",shoppingMall.promotionSet.getBasicItemList()));
+//
+//
+//    }
 
 
 

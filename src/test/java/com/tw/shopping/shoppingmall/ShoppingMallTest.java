@@ -2,21 +2,20 @@ package com.tw.shopping.shoppingmall;
 
 import com.tw.shopping.product.Item;
 import com.tw.shopping.product.Product;
-import com.tw.shopping.promotion.*;
-
+import com.tw.shopping.promotion.DiscountItem;
+import com.tw.shopping.promotion.HundredMinusItem;
+import com.tw.shopping.promotion.PromotionSet;
+import com.tw.shopping.promotion.SecondHalfItem;
+import com.tw.shopping.util.Path;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
+import static org.junit.Assert.*;
 
 public class ShoppingMallTest {
-
     @Test
     public void should_display_msg() throws Exception {
 
@@ -149,7 +148,9 @@ public class ShoppingMallTest {
         shoppingMall.setPromotionSet(promotionSet);
         shoppingMall.initialShoppingMall();
 
-        List<Item> cartList=cart.putInCart("/home/sun/IdeaProjects/ShoppingProject-master/File/cart.txt", shoppingMall.getPromotionSet().getBasicItemList());
+        String path= Path.getPath();
+        System.out.println(path);
+        List<Item> cartList=cart.putInCart(path+"/File/cart.txt", shoppingMall.getPromotionSet().getBasicItemList());
         shoppingMall.checkOut(cartList);
 
         assertThat(shoppingMall.getDisPayment(), is(394.0));

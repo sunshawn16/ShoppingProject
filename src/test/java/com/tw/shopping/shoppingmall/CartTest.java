@@ -92,13 +92,13 @@ public class CartTest {
     @Rule
     public ExpectedException thrown= ExpectedException.none();
 
-    @Test
-    public void should_have_problem_when_path_is_wrong() throws Exception {
-
-        Cart cart = new Cart();
-        thrown.expect(IOException.class);
-        thrown.expectMessage("error");
-        cart.t_initialCart("adasdasdsa");
-
-    }
+//    @Test
+//    public void should_have_problem_when_path_is_wrong() throws Exception {
+//
+//        Cart cart = new Cart();
+//        thrown.expect(IOException.class);
+//        thrown.expectMessage("error");
+//        cart.t_initialCart("adasdasdsa");
+//
+//    }
 }
