@@ -10,7 +10,7 @@ public class CartParse extends Parse<Item> {
 
 
     @Override
-    protected Item convert(String line) {
+    public Item convert(String line) {
         Item cartItem=new Item();
         String a[]=line.split(":");
         cartItem.setProductId(a[0]);

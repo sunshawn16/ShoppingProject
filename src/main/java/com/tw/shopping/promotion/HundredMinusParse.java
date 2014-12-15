@@ -8,7 +8,7 @@ import com.tw.shopping.util.Parse;
 public class HundredMinusParse extends Parse<HundredMinusItem> {
 
     @Override
-    protected HundredMinusItem convert(String line) {
+    public HundredMinusItem convert(String line) {
         HundredMinusItem hundredMinusItem=new HundredMinusItem();
         String a[]=line.split(":");
         hundredMinusItem.setProductId(a[0]);

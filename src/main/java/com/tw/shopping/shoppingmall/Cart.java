@@ -14,51 +14,35 @@ import java.util.List;
  */
 public class Cart {
 
-    private Parse cartItem;
 
-//    PromotionSet promotionSet;
 
 
     public Cart(){}
-//    public Cart(PromotionSet promotionSet){
-//        this.promotionSet=promotionSet;
-//    }
+
 
     //添加购物车和数据整理
-    public List<Item> putInCart(String path,List<Item> basicList){
+    public List<Item> InitialCart(List<Item> cartList, List<Item> basicList){//输入和输出 做了 多余的事情 要分开;命名;;直接 传进来cartlist ,,,不关心path不要path
 
-        //解析购物车文件
-        List<Item> cartList= new ArrayList<Item>();
-
-        try {
-            cartList=initialCart(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-//            cartList=initialCart("")
-        }
-        //读取原始价格
         initialOrigPrice(cartList,basicList);
 
         //整理乱序的购物车,以得到实数量
         return settleCart(cartList);
 
     }
-    public List<Item> t_initialCart(String path) throws IOException{
-        return initialCart(path);
-    }
 
-    private List<Item> initialCart(String path) throws IOException {
-        cartItem = new CartParse();
-        List<Item> cartList= null;
-        cartList = cartItem.parse(path);
-//        try {
-//            cartList = cartItem.parse(path);
-//        } catch (IOException e) {
-//            System.out.println("path has problem!");
-//            e.printStackTrace();
-//        }
-        return cartList;
-    }
+
+//    private List<Item> initialCart(List<Item> cartList) throws IOException {
+//        //cartItem = new CartParse();不要NEW parse应该是只关心list
+//        List<Item> cartList= null;
+//        cartList = cartItem.parse(path);
+////        try {
+////            cartList = cartItem.parse(path);
+////        } catch (IOException e) {
+////            System.out.println("path has problem!");
+////            e.printStackTrace();
+////        }
+//        return cartList;
+//    }
 
     public List<Item> t_settleCart(List<Item> cartList) {
         return  settleCart(cartList);

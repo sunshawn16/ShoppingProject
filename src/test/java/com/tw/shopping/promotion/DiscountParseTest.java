@@ -26,28 +26,16 @@ public class DiscountParseTest {
     @Test
     public void should_get_DiscountList_when_do_parse() throws Exception {
 
-        //1.先mock一个待测试类的对象
-        DiscountParse mockDiscountParse=mock(DiscountParse.class);
 
-        //2.创建执行完成后.希望返回的数据
-        List<DiscountItem>  discountItemList=new ArrayList<DiscountItem>();
-        DiscountItem discountItem=new DiscountItem();
-        discountItem.setProductId("ITEM000001");
-        discountItem.setDiscountPercentage(75);
-        discountItemList.add(discountItem);
+        String line="ITEM000001:75";
+        DiscountParse discountParse= new DiscountParse();
+        DiscountItem discountItem= discountParse.convert(line);
 
-        //3.这个地址不重要,可以随意写,因为不会真正的去读文件
-        String path="./File/discount_promotion----";
+        assertThat(discountItem.getDiscountPercentage(),is(75));
+        assertThat(discountItem.getProductId(),is("ITEM000001"));
 
-        //4.设定parse执行后的返回值,即第2步创建的那个discountItemList对象
-        when(mockDiscountParse.parse(path)).thenReturn(discountItemList);
 
-        //5.执行测试:执行parse方法,得到结果
-        List<DiscountItem> results= ( List<DiscountItem>) mockDiscountParse.parse(path);
 
-        verify(mockDiscountParse).parse(path);
-        //6.断言
-        assertThat(results.get(0).getProductId(),is("ITEM000001"));
     }
 
 }

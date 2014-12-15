@@ -8,10 +8,11 @@ import java.lang.String;
 public class BasicItemParse extends Parse<Item> {
 
     @Override
-    protected Item convert(String line) {
+    public Item convert(String line) {
         String a[]=line.split(":");
         Item basicItem=new Item();
         basicItem.setProductId(a[0]);
+
         basicItem.setOrigPrice(Double.parseDouble(a[1]));
 
         return basicItem;

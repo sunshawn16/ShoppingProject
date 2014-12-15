@@ -9,7 +9,7 @@ public class DiscountParse extends Parse<DiscountItem> {
 
 
     @Override
-    protected DiscountItem convert(String line) {
+    public DiscountItem convert(String line) {
         String a[]=line.split(":");
         DiscountItem discountItem=new DiscountItem();
         discountItem.setProductId(a[0]);

@@ -8,7 +8,7 @@ import com.tw.shopping.util.Parse;
 public class SecondHalfParse extends Parse<SecondHalfItem> {
 
     @Override
-    protected SecondHalfItem convert(String line) {
+    public SecondHalfItem convert(String line) {
         SecondHalfItem secondHalfItem=new SecondHalfItem();
         secondHalfItem.setProductId(line);
         return secondHalfItem;

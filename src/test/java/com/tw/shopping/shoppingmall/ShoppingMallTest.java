@@ -2,10 +2,9 @@ package com.tw.shopping.shoppingmall;
 
 import com.tw.shopping.product.Item;
 import com.tw.shopping.product.Product;
-import com.tw.shopping.promotion.DiscountItem;
-import com.tw.shopping.promotion.HundredMinusItem;
-import com.tw.shopping.promotion.PromotionSet;
-import com.tw.shopping.promotion.SecondHalfItem;
+import com.tw.shopping.promotion.*;
+import com.tw.shopping.util.CartParse;
+import com.tw.shopping.util.Parse;
 import com.tw.shopping.util.Path;
 import org.junit.Test;
 
@@ -16,35 +15,12 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class ShoppingMallTest {
-    @Test
-    public void should_display_msg() throws Exception {
+//    @Test
+//    public void should_display_msg() throws Exception {
+//
+//        assertEquals(1,new ShoppingMall().printTotal());
+//    }
 
-        assertEquals(1,new ShoppingMall().printTotal());
-    }
-
-    @Test
-    public void should_have_initialShoppingMall_when_do() throws Exception {
-        ShoppingMall shoppingMall= new ShoppingMall();
-//        Cart cart= new Cart();
-        PromotionSet promotionSet = new PromotionSet();
-        shoppingMall.setPromotionSet(promotionSet);
-
-        shoppingMall.initialShoppingMall();
-
-
-        assertEquals(3,promotionSet.getBasicItemList().size());
-        assertEquals(2,promotionSet.getDiscountItemList().size());
-
-
-        assertEquals(1,promotionSet.getHundredMinusItemList().size());
-        assertEquals(2,promotionSet.getSecondHalfItemList().size());
-
-//        assertNotNull(shoppingMall.promotionSet.getBasicItemList());
-//        assertNotNull(shoppingMall.promotionSet.getDiscountItemList());
-//        assertNotNull(shoppingMall.promotionSet.getHundredMinusItemList());
-//        assertNotNull(shoppingMall.promotionSet.getSecondHalfItemList().size());
-
-    }
 
     @Test
     public void should_get_discount_cost_when_item_have_promotion()  {
@@ -69,6 +45,7 @@ public class ShoppingMallTest {
 
         assertThat(item.getPayment(),is(210.0));
     }
+
     @Test
     public void should_not_get_discount__when_item_not_have_promotion() {
 
@@ -141,20 +118,37 @@ public class ShoppingMallTest {
     @Test
     public void should_get_checkout_when_cart_comes() throws Exception {
 
+        String path=Path.getPath();
+
+        Parse basicItemParse = new BasicItemParse();
+        Parse discountItemParse= new DiscountParse();
+        Parse secondHalfParse= new SecondHalfParse();
+        Parse hundredMinusParse= new HundredMinusParse();
+        Parse cartParse= new CartParse();
+
+        List<Item> basicItemList=basicItemParse.parse(path+"/File/itemList");
+        List<DiscountItem> discountItemList= discountItemParse.parse(path+"/File/discount");
+        List<SecondHalfItem>secondHalfItemList=secondHalfParse.parse(path+"/File/secondHalf");
+        List<HundredMinusItem> hundredMinusList=hundredMinusParse.parse(path+"/File/hundredMinus");
+        List<Item> cartList=cartParse.parse(path + "/File/cart");
+
+        PromotionSet promotionSet=new PromotionSet();
+        promotionSet.setBasicItemList(basicItemList);
+        promotionSet.setDiscountItemList(discountItemList);
+        promotionSet.setHundredMinusItemList(hundredMinusList);
+        promotionSet.setSecondHalfItemList(secondHalfItemList);
+
         ShoppingMall shoppingMall= new ShoppingMall();
-
-        Cart cart= new Cart();
-        PromotionSet promotionSet = new PromotionSet();
         shoppingMall.setPromotionSet(promotionSet);
-        shoppingMall.initialShoppingMall();
+        Cart cart= new Cart();
 
-        String path= Path.getPath();
-        System.out.println(path);
-        List<Item> cartList=cart.putInCart(path+"/File/cart.txt", shoppingMall.getPromotionSet().getBasicItemList());
-        shoppingMall.checkOut(cartList);
 
-        assertThat(shoppingMall.getDisPayment(), is(394.0));
-        assertThat(shoppingMall.getOrigPayment(), is(540.0));
+        List<Item> finalCartList=cart.InitialCart(cartList,promotionSet.getBasicItemList());
+
+        shoppingMall.checkOut(finalCartList);
+
+        assertThat(shoppingMall.getDisPayment(),is(394.0));
+
 
     }
 

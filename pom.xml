@@ -36,10 +36,9 @@
         </goals>
       </execution>
       <execution>
-        <id>Verify</id>
-        <phase>verify</phase>
         <goals>
           <goal>cobertura</goal>
+          <goal>check</goal>
         </goals>
       </execution>
     </executions>

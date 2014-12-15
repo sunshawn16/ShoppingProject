@@ -21,7 +21,7 @@ public class DiscountTest {
 
 
     @Test
-    public void testshould_get_cost_when_discount_is_80() throws Exception {
+    public void should_get_cost_when_discount_is_80() throws Exception {
 
         item=new Discount(item,80);
 
@@ -30,4 +30,5 @@ public class DiscountTest {
         assertEquals(160.0,item.getPayment(),1);
 
     }
+
 }
