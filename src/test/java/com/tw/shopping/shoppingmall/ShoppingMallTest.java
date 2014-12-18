@@ -1,5 +1,8 @@
 package com.tw.shopping.shoppingmall;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.tw.shopping.Module.BasicItemModule;
 import com.tw.shopping.product.Item;
 import com.tw.shopping.product.Product;
 import com.tw.shopping.promotion.*;
@@ -120,7 +123,11 @@ public class ShoppingMallTest {
 
         String path=Path.getPath();
 
-        Parse basicItemParse = new BasicItemParse();
+        Injector injector = Guice.createInjector(new BasicItemModule());
+        Parse basicItemParse = injector.getInstance(Parse.class);
+//        basicItemParse.parse();
+
+//        Parse basicItemParse = new BasicItemParse();
         Parse discountItemParse= new DiscountParse();
         Parse secondHalfParse= new SecondHalfParse();
         Parse hundredMinusParse= new HundredMinusParse();
