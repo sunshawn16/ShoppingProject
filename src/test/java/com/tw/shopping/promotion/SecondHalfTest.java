@@ -1,8 +1,7 @@
 package com.tw.shopping.promotion;
 
 import com.tw.shopping.product.Item;
-import com.tw.shopping.product.Product;
-import com.tw.shopping.promotion.SecondHalf;
+import com.tw.shopping.product.ProductImpl;
 import org.junit.Test;
 
 
@@ -12,7 +11,7 @@ public class SecondHalfTest {
     @Test
     public void should_get_cost_when_item_is_one() throws Exception {
 
-        Product item=new Item();
+        ProductImpl item=new Item();
         item.setNum(1);
         item.setOrigPrice(20);
         item=new SecondHalf(item);
@@ -25,7 +24,7 @@ public class SecondHalfTest {
     @Test
     public void should_get_cost_when_item_is_five() throws Exception {
 
-        Product item=new Item();
+        ProductImpl item=new Item();
         item.setNum(5);
         item.setOrigPrice(20);
         item=new SecondHalf(item);

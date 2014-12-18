@@ -1,8 +1,7 @@
 package com.tw.shopping.promotion;
 
 import com.tw.shopping.product.Item;
-import com.tw.shopping.product.Product;
-import com.tw.shopping.promotion.HundredMinus;
+import com.tw.shopping.product.ProductImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,7 +12,7 @@ public class HundredMinusTest {
 
     @Test
     public void should_get_test_when_reduction_is_5() throws Exception {
-        Product item=new Item();
+        ProductImpl item=new Item();
         item.setOrigPrice(10);
         item.setNum(10);
         item=new HundredMinus(item,5);

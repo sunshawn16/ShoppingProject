@@ -1,15 +1,15 @@
 package com.tw.shopping.promotion;
 
-import com.tw.shopping.product.Product;
+import com.tw.shopping.product.ProductImpl;
 
 /**
  * Created by sun on 14-12-4.
  */
 public class HundredMinus extends Promotion {
     private double reduction;
-    Product product;
+    ProductImpl productImpl;
 
-    public HundredMinus(Product product,double reduction){this.product=product;this.reduction=reduction;}
+    public HundredMinus(ProductImpl productImpl,double reduction){this.productImpl = productImpl;this.reduction=reduction;}
 
     public double getReduction() {
         return reduction;
@@ -21,14 +21,14 @@ public class HundredMinus extends Promotion {
 
     @Override
     public void cost() {
-        product.cost();
+        productImpl.cost();
 
-        this.productId=product.getProductId();
-        this.num=product.getNum();
-        this.origPrice =product.getOrigPrice();
-        this.disPrice=product.getDisPrice();
-        int numberHundred=(int)product.getPayment()/100;
-        this.payment =product.getPayment()-numberHundred*reduction;
+        this.productId= productImpl.getProductId();
+        this.num= productImpl.getNum();
+        this.origPrice = productImpl.getOrigPrice();
+        this.disPrice= productImpl.getDisPrice();
+        int numberHundred=(int) productImpl.getPayment()/100;
+        this.payment = productImpl.getPayment()-numberHundred*reduction;
 
     }
 

@@ -1,22 +1,15 @@
 package com.tw.shopping.shoppingmall;
 
+import com.google.inject.Guice;
+import com.tw.shopping.Module.CartModule;
 import com.tw.shopping.product.Item;
-import com.tw.shopping.promotion.DiscountItem;
-import com.tw.shopping.promotion.DiscountParse;
-import com.tw.shopping.promotion.PromotionSet;
-import com.tw.shopping.shoppingmall.Cart;
-import com.tw.shopping.util.CartParse;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +31,7 @@ public class CartTest {
         cartList.add(item1);
         cartList.add(item2);
 
-        Cart cart = new Cart();
+        CartImpl cart =(CartImpl) Guice.createInjector(new CartModule()).getInstance(Cart.class);
         List<Item> finalCart=cart.t_settleCart(cartList);
 
         assertThat(finalCart.get(0).getNum(),is(1));
@@ -61,7 +54,7 @@ public class CartTest {
         cartList.add(item2);
         cartList.add(item3);
 
-        Cart cart = new Cart();
+        CartImpl cart = (CartImpl)Guice.createInjector(new CartModule()).getInstance(Cart.class);
         List<Item> finalCart=cart.t_settleCart(cartList);
 
         assertThat(finalCart.get(0).getNum(),is(6));
@@ -72,7 +65,7 @@ public class CartTest {
     @Test
     public void should_initial_price_when_do_initial() throws Exception {
 
-        Cart cart= new Cart();
+        CartImpl cart =(CartImpl) Guice.createInjector(new CartModule()).getInstance(Cart.class);
         List<Item>  basicItemList=new ArrayList<Item>();
         Item item= new Item();
         item.setProductId("Item000001");

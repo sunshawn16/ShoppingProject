@@ -1,15 +1,14 @@
 package com.tw.shopping.promotion;
 
 import com.tw.shopping.product.Item;
-import com.tw.shopping.product.Product;
-import com.tw.shopping.promotion.Discount;
+import com.tw.shopping.product.ProductImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class DiscountTest {
-    Product item;
+    ProductImpl item;
 
     @Before
     public void setup(){

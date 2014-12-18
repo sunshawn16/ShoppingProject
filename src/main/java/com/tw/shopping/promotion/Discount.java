@@ -7,9 +7,9 @@ import com.tw.shopping.product.*;
  */
 public class Discount extends Promotion {
     private int discountPercentage;
-    Product product;
+    ProductImpl productImpl;
 
-    public Discount(Product product,int discountPercentage){this.product=product;this.discountPercentage=discountPercentage;}
+    public Discount(ProductImpl productImpl,int discountPercentage){this.productImpl = productImpl;this.discountPercentage=discountPercentage;}
 
     public int getDiscountPercentage() {
         return discountPercentage;
@@ -21,13 +21,13 @@ public class Discount extends Promotion {
 
     @Override
     public void cost() {
-        product.cost();
+        productImpl.cost();
 
-        this.productId=product.getProductId();
-        this.num=product.getNum();
-        this.origPrice =product.getOrigPrice();
-        this.disPrice=product.getOrigPrice() *discountPercentage/100;
-        this.payment=product.getPayment()*discountPercentage/100;
+        this.productId= productImpl.getProductId();
+        this.num= productImpl.getNum();
+        this.origPrice = productImpl.getOrigPrice();
+        this.disPrice= productImpl.getOrigPrice() *discountPercentage/100;
+        this.payment= productImpl.getPayment()*discountPercentage/100;
 
     }
 }

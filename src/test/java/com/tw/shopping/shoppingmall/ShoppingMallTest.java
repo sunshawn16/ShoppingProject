@@ -2,14 +2,15 @@ package com.tw.shopping.shoppingmall;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.tw.shopping.Module.BasicItemModule;
+import com.tw.shopping.Module.*;
 import com.tw.shopping.product.Item;
 import com.tw.shopping.product.Product;
+import com.tw.shopping.product.ProductImpl;
 import com.tw.shopping.promotion.*;
-import com.tw.shopping.util.CartParse;
 import com.tw.shopping.util.Parse;
 import com.tw.shopping.util.Path;
 import org.junit.Test;
+import sun.awt.image.GifImageDecoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +37,14 @@ public class ShoppingMallTest {
 
         PromotionSet promotionSet= new PromotionSet();
         promotionSet.setDiscountItemList(discountItemList);
-        Product item= new Item();
+        ProductImpl item= new Item();
         item.setProductId("01");
         item.setOrigPrice(60.0);
         item.setNum(5);
 
-        ShoppingMall shoppingMall= new ShoppingMall();
+        ShoppingMallImpl shoppingMall=(ShoppingMallImpl)Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
         shoppingMall.setPromotionSet(promotionSet);
-        item = shoppingMall.decorateDiscount(item, item.getProductId());
+        item =(ProductImpl) shoppingMall.decorateDiscount(item, item.getProductId());
         item.cost();
 
         assertThat(item.getPayment(),is(210.0));
@@ -59,14 +60,14 @@ public class ShoppingMallTest {
         discountItemList.add(discountItem);
         PromotionSet promotionSet= new PromotionSet();
         promotionSet.setDiscountItemList(discountItemList);
-        Product item= new Item();
+        ProductImpl item= new Item();
         item.setProductId("01");
         item.setOrigPrice(60.0);
         item.setNum(5);
 
-        ShoppingMall shoppingMall= new ShoppingMall();
+        ShoppingMallImpl shoppingMall=(ShoppingMallImpl)Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
         shoppingMall.setPromotionSet(promotionSet);
-        item = shoppingMall.decorateDiscount(item, item.getProductId());
+        item =(ProductImpl) shoppingMall.decorateDiscount(item, item.getProductId());
         item.cost();
 
         assertThat(item.getPayment(),is(300.0));
@@ -81,14 +82,14 @@ public class ShoppingMallTest {
         secondHalfItemList.add(secondHalfItem);
         PromotionSet promotionSet= new PromotionSet();
         promotionSet.setSecondHalfItemList(secondHalfItemList);
-        Product item= new Item();
+        ProductImpl item= new Item();
         item.setProductId("01");
         item.setOrigPrice(60.0);
         item.setNum(2);
 
-        ShoppingMall shoppingMall= new ShoppingMall();
+        ShoppingMallImpl shoppingMall=(ShoppingMallImpl)Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
         shoppingMall.setPromotionSet(promotionSet);
-        item = shoppingMall.decorateSecondHalfItem(item, item.getProductId());
+        item =(ProductImpl) shoppingMall.decorateSecondHalfItem(item, item.getProductId());
         item.cost();
 
         assertThat(item.getPayment(),is(90.0));
@@ -104,14 +105,15 @@ public class ShoppingMallTest {
         hundredMinusItemList.add(hundredMinusItem);
         PromotionSet promotionSet= new PromotionSet();
         promotionSet.setHundredMinusItemList(hundredMinusItemList);
-        Product item= new Item();
+        //ProductImpl item= new Item();
+        ProductImpl item =(ProductImpl) Guice.createInjector(new ProductModule()).getInstance(Product.class);
         item.setProductId("01");
         item.setOrigPrice(60.0);
         item.setNum(2);
 
-        ShoppingMall shoppingMall= new ShoppingMall();
+        ShoppingMallImpl shoppingMall=(ShoppingMallImpl)Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
         shoppingMall.setPromotionSet(promotionSet);
-        item = shoppingMall.decorateHundredItem(item, item.getProductId());
+        item = (ProductImpl)shoppingMall.decorateHundredItem(item, item.getProductId());
         item.cost();
 
         assertThat(item.getPayment(),is(115.0));
@@ -125,13 +127,18 @@ public class ShoppingMallTest {
 
         Injector injector = Guice.createInjector(new BasicItemModule());
         Parse basicItemParse = injector.getInstance(Parse.class);
-//        basicItemParse.parse();
+        Injector injector1=Guice.createInjector(new HundredMinusModule());
+        Parse hundredMinusParse= injector1.getInstance(Parse.class);
+        Parse discountItemParse=Guice.createInjector(new DiscountModule()).getInstance(Parse.class);
+        Parse secondHalfParse= Guice.createInjector(new SecondHalfModule()).getInstance(Parse.class);
+        Parse cartParse= Guice.createInjector(new CartParseModule()).getInstance(Parse.class);
 
+//        basicItemParse.parse();
 //        Parse basicItemParse = new BasicItemParse();
-        Parse discountItemParse= new DiscountParse();
-        Parse secondHalfParse= new SecondHalfParse();
-        Parse hundredMinusParse= new HundredMinusParse();
-        Parse cartParse= new CartParse();
+//        Parse discountItemParse= new DiscountParse();
+//        Parse secondHalfParse= new SecondHalfParse();
+//        Parse hundredMinusParse= new HundredMinusParse();
+//        Parse cartParse= new CartParse();
 
         List<Item> basicItemList=basicItemParse.parse(path+"/File/itemList");
         List<DiscountItem> discountItemList= discountItemParse.parse(path+"/File/discount");
@@ -145,9 +152,10 @@ public class ShoppingMallTest {
         promotionSet.setHundredMinusItemList(hundredMinusList);
         promotionSet.setSecondHalfItemList(secondHalfItemList);
 
-        ShoppingMall shoppingMall= new ShoppingMall();
+        ShoppingMall shoppingMall=Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
+//        ShoppingMallImpl shoppingMall= new ShoppingMallImpl();
         shoppingMall.setPromotionSet(promotionSet);
-        Cart cart= new Cart();
+        Cart cart = Guice.createInjector(new CartModule()).getInstance(Cart.class);
 
 
         List<Item> finalCartList=cart.InitialCart(cartList,promotionSet.getBasicItemList());

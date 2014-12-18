@@ -3,7 +3,7 @@ package com.tw.shopping.product;
 /**
  * Created by sun on 14-12-4.
  */
-public class Item extends Product {
+public class Item extends ProductImpl {
 
     private double disPrice;
 
