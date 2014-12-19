@@ -1,9 +1,16 @@
 package com.tw.shopping.shoppingmall;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.tw.shopping.Module.*;
 import com.tw.shopping.promotion.*;
 import com.tw.shopping.product.*;
+import com.tw.shopping.util.Parse;
+import com.tw.shopping.util.Path;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,7 +21,7 @@ public class ShoppingMallImpl implements ShoppingMall{
     private double origPayment;
     private double disPayment;
 
-    PromotionSet promotionSet;
+    PromotionGroup promotionGroup;
 
     public double getOrigPayment() {
         return origPayment;
@@ -32,20 +39,21 @@ public class ShoppingMallImpl implements ShoppingMall{
         this.disPayment = disPayment;
     }
 
-    public PromotionSet getPromotionSet() {
-        return promotionSet;
+    public PromotionGroup getPromotionGroup() {
+        return promotionGroup;
     }
 
-    public void setPromotionSet(PromotionSet promotionSet) {
-        this.promotionSet = promotionSet;
+    @Inject
+    public void setPromotionGroup(PromotionGroup promotionGroup) {
+        this.promotionGroup = promotionGroup;
     }
 
     public ShoppingMallImpl(){
 
     }
 
-    public ShoppingMallImpl(PromotionSet promotionSet){
-        this.promotionSet = promotionSet;
+    public ShoppingMallImpl(PromotionGroup promotionGroup){
+        this.promotionGroup = promotionGroup;
     }
 
 
@@ -68,7 +76,7 @@ public class ShoppingMallImpl implements ShoppingMall{
     //产品系列活动
     public Product  decorateDiscount(ProductImpl item,String productIdOrig) {//productId 存在没有意义,
 
-        for(DiscountItem discountItem:promotionSet.getDiscountItemList()){
+        for(DiscountItem discountItem: promotionGroup.getDiscountItemList()){
             if(productIdOrig.equals(discountItem.getProductId())){
                 item = new Discount(item,discountItem.getDiscountPercentage());
                 break;
@@ -78,7 +86,7 @@ public class ShoppingMallImpl implements ShoppingMall{
     }
 
     public Product decorateHundredItem(ProductImpl item,String productIdOrig) {
-        for(HundredMinusItem hundredMinusItem:promotionSet.getHundredMinusItemList()){
+        for(HundredMinusItem hundredMinusItem: promotionGroup.getHundredMinusItemList()){
             if(productIdOrig.equals(hundredMinusItem.getProductId())){
                 item=new HundredMinus(item,hundredMinusItem.getReduction());
                 break;
@@ -88,7 +96,7 @@ public class ShoppingMallImpl implements ShoppingMall{
     }
 
     public Product decorateSecondHalfItem(ProductImpl item,String productIdOrig){
-        for(SecondHalfItem secondHalfItem:promotionSet.getSecondHalfItemList()) {
+        for(SecondHalfItem secondHalfItem: promotionGroup.getSecondHalfItemList()) {
             if (productIdOrig.equals(secondHalfItem.getProductId())) {
                 item = new SecondHalf(item);
                 break;
@@ -130,37 +138,42 @@ public class ShoppingMallImpl implements ShoppingMall{
         printTotal();
     }
 
-//    public static void main(String args[])throws IOException{
-//
-//        String path=Path.getPath();
-//
-//        Parse basicItemParse = new BasicItemParse();
-//        Parse discountItemParse= new DiscountParse();
-//        Parse secondHalfParse= new SecondHalfParse();
-//        Parse hundredMinusParse= new HundredMinusParse();
-//        Parse cartParse= new CartParse();
-//
-//        List<Item> basicItemList=basicItemParse.parse(path+"/File/itemList");
-//        List<DiscountItem> discountItemList= discountItemParse.parse(path+"/File/discount");
-//        List<SecondHalfItem>secondHalfItemList=secondHalfParse.parse(path+"/File/secondHalf");
-//        List<HundredMinusItem> hundredMinusList=hundredMinusParse.parse(path+"/File/hundredMinus");
-//        List<Item> cartList=cartParse.parse(path + "/File/cart");
-//
-//        PromotionSet promotionSet=new PromotionSet();
-//        promotionSet.setBasicItemList(basicItemList);
-//        promotionSet.setDiscountItemList(discountItemList);
-//        promotionSet.setHundredMinusItemList(hundredMinusList);
-//        promotionSet.setSecondHalfItemList(secondHalfItemList);
-//
-//        ShoppingMall shoppingMall= new ShoppingMall();
-//        shoppingMall.setPromotionSet(promotionSet);
-//        Cart cart= new Cart();
-//
-//
-//        List<Item> finalCartList=cart.InitialCart(cartList,promotionSet.getBasicItemList());
-//
-//        shoppingMall.checkOut(finalCartList);
-//
-//    }
+    public static void main(String args[])throws IOException {
+
+        String path= Path.getPath();
+
+        Injector injector = Guice.createInjector(new BasicItemModule());
+        Parse basicItemParse = injector.getInstance(Parse.class);
+        Injector injector1=Guice.createInjector(new HundredMinusModule());
+        Parse hundredMinusParse= injector1.getInstance(Parse.class);
+        Parse discountItemParse=Guice.createInjector(new DiscountModule()).getInstance(Parse.class);
+        Parse secondHalfParse= Guice.createInjector(new SecondHalfModule()).getInstance(Parse.class);
+        Parse cartParse= Guice.createInjector(new CartParseModule()).getInstance(Parse.class);
+
+
+
+        List<Item> basicItemList=basicItemParse.parse(path+"/File/itemList");
+        List<DiscountItem> discountItemList= discountItemParse.parse(path+"/File/discount");
+        List<SecondHalfItem>secondHalfItemList=secondHalfParse.parse(path+"/File/secondHalf");
+        List<HundredMinusItem> hundredMinusList=hundredMinusParse.parse(path+"/File/hundredMinus");
+        List<Item> cartList=cartParse.parse(path + "/File/cart");
+
+        PromotionGroup promotionGroup=new PromotionGroup();
+        promotionGroup.setBasicItemList(basicItemList);
+        promotionGroup.setDiscountItemList(discountItemList);
+        promotionGroup.setHundredMinusItemList(hundredMinusList);
+        promotionGroup.setSecondHalfItemList(secondHalfItemList);
+
+        ShoppingMall shoppingMall=Guice.createInjector(new ShoppingMallModule()).getInstance(ShoppingMall.class);
+        shoppingMall.setPromotionGroup(promotionGroup);
+
+        Cart cart = Guice.createInjector(new CartModule()).getInstance(Cart.class);
+
+
+        List<Item> finalCartList=cart.InitialCart(cartList,promotionGroup.getBasicItemList());
+
+        shoppingMall.checkOut(finalCartList);
+
+    }
 
 }

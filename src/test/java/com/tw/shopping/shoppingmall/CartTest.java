@@ -1,7 +1,5 @@
 package com.tw.shopping.shoppingmall;
 
-import com.google.inject.Guice;
-import com.tw.shopping.Module.CartModule;
 import com.tw.shopping.product.Item;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +29,7 @@ public class CartTest {
         cartList.add(item1);
         cartList.add(item2);
 
-        CartImpl cart =(CartImpl) Guice.createInjector(new CartModule()).getInstance(Cart.class);
+        CartImpl cart =new CartImpl();
         List<Item> finalCart=cart.t_settleCart(cartList);
 
         assertThat(finalCart.get(0).getNum(),is(1));
@@ -54,7 +52,7 @@ public class CartTest {
         cartList.add(item2);
         cartList.add(item3);
 
-        CartImpl cart = (CartImpl)Guice.createInjector(new CartModule()).getInstance(Cart.class);
+        CartImpl cart =new CartImpl();
         List<Item> finalCart=cart.t_settleCart(cartList);
 
         assertThat(finalCart.get(0).getNum(),is(6));
@@ -65,7 +63,7 @@ public class CartTest {
     @Test
     public void should_initial_price_when_do_initial() throws Exception {
 
-        CartImpl cart =(CartImpl) Guice.createInjector(new CartModule()).getInstance(Cart.class);
+        CartImpl cart =new CartImpl();
         List<Item>  basicItemList=new ArrayList<Item>();
         Item item= new Item();
         item.setProductId("Item000001");

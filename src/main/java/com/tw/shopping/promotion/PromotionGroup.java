@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by sun on 14-12-7.
  */
-public class PromotionSet {
+public class PromotionGroup {
     private Parse discount;
     private Parse second;
     private Parse hundred ;

@@ -2,7 +2,7 @@ package com.tw.shopping.shoppingmall;
 
 import com.tw.shopping.product.Item;
 import com.tw.shopping.product.ProductImpl;
-import com.tw.shopping.promotion.PromotionSet;
+import com.tw.shopping.promotion.PromotionGroup;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public interface ShoppingMall {
 
     //public void addPromotion(List<>);
-    public void setPromotionSet(PromotionSet promotionSet);
+    public void setPromotionGroup(PromotionGroup promotionGroup);
     public double getDisPayment();
 
     public void checkOut(List<Item> cartList);
